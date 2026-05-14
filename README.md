@@ -1,17 +1,33 @@
 # MetaResearch
 
-Small Python toolkit for collecting and normalizing literature metadata for downstream research workflows.
+Research tooling is still weirdly manual.
 
-This repo currently centers on a PubMed connector built on top of Biopython's `Entrez` client. It can:
+MetaResearch is a small Python project for turning messy literature search into structured, reusable research data. The current focus is PubMed ingestion, but the real direction is larger: a foundation for search, extraction, synthesis, and eventually meta-analysis workflows that do not collapse into spreadsheet chaos.
+
+## Why this exists
+
+Most research workflows still look like this:
+
+- search for papers
+- click through inconsistent records
+- copy metadata by hand
+- lose track of what has already been collected
+- rebuild the same dataset every time a question changes
+
+MetaResearch starts by fixing the ingestion layer.
+
+Right now it gives you a clean PubMed connector that can:
 
 - search PubMed and return PMIDs
 - fetch normalized article records
-- fetch PMC full text when a PubMed article has a linked PMC record
-- append unseen PubMed results to a JSONL dataset
+- fetch PMC full text when available
+- append only unseen results to a JSONL dataset
 
-The `sleep/` folder is intentionally not documented here yet.
+That sounds small, but it is the piece everything else depends on.
 
-## Current layout
+## What is in the repo
+
+The current codebase is intentionally narrow.
 
 ```text
 .
@@ -25,7 +41,9 @@ The `sleep/` folder is intentionally not documented here yet.
     └── connectors/pubmed/
 ```
 
-## Install
+The `sleep/` work is not part of this README yet.
+
+## Quick start
 
 This project targets Python 3.13+.
 
@@ -33,24 +51,19 @@ This project targets Python 3.13+.
 uv sync
 ```
 
-If you are not using `uv`, install the package and dev dependencies manually:
+If you are not using `uv`:
 
 ```bash
 pip install -e .
 pip install pytest
 ```
 
-## PubMed usage
-
-NCBI requires an email for Entrez requests. An API key is optional, and can be passed directly or through `NCBI_API_KEY`.
+NCBI requires an email for Entrez requests. You can also provide an API key directly or through `NCBI_API_KEY`.
 
 ```python
 from metaresearch.connectors.pubmed.PubMedConnector import PubMedConnector
 
-connector = PubMedConnector(
-    email="you@example.com",
-    api_key=None,
-)
+connector = PubMedConnector(email="you@example.com")
 
 pmids = connector.search("sleep deprivation AND cognition", max_results=5)
 records = list(connector.fetch_records(pmids))
@@ -59,7 +72,7 @@ for record in records:
     print(record.source_id, record.title)
 ```
 
-To append only new PubMed results to a JSONL file:
+If you want a dataset you can keep growing without duplicating rows:
 
 ```python
 written = connector.search_and_store_jsonl(
@@ -67,10 +80,14 @@ written = connector.search_and_store_jsonl(
     "data/pubmed.jsonl",
     max_results=100,
 )
-print(written)
+print(f"wrote {written} new records")
 ```
 
-Each normalized record is represented by `RawRecord`, which includes fields such as:
+## Data model
+
+Records are normalized into a shared `RawRecord` shape so downstream code does not need to care where the paper came from.
+
+Typical fields include:
 
 - `source`
 - `source_id`
@@ -91,6 +108,16 @@ Each normalized record is represented by `RawRecord`, which includes fields such
 pytest tests/connectors/pubmed/test_pubmed_connector.py
 ```
 
-## Status
+## Direction
 
-The package structure suggests a broader literature-ingestion and meta-research workflow, but only the PubMed connector is implemented in a meaningful way right now. `main.py` is still a placeholder entry point.
+This is not meant to stop at “PubMed wrapper.”
+
+The broader idea is a research stack that can move from:
+
+- ingestion
+- retrieval
+- extraction
+- synthesis
+- meta-analysis
+
+The current implementation is just the first layer, but it is the right first layer: reliable, structured paper intake.
