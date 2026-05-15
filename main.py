@@ -1,5 +1,5 @@
 def main():
-    print("Hello from metaresearch!")
+    print("Hello from Evidentia!")
 
 
 if __name__ == "__main__":

@@ -10,9 +10,9 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 from xml.etree import ElementTree as ET
 
-from metaresearch.connectors.LiteratureConnector import RawRecord
+from evidentia.connectors.LiteratureConnector import RawRecord
 
-connector_module = importlib.import_module("metaresearch.connectors.pubmed.PubMedConnector")
+connector_module = importlib.import_module("evidentia.connectors.pubmed.PubMedConnector")
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
@@ -31,7 +31,7 @@ class PubMedConnectorTests(unittest.TestCase):
         self.connector = connector_module.PubMedConnector(
             email="reader@example.com",
             api_key="test-key",
-            tool="MetaResearchTests",
+            tool="EvidentiaTests",
         )
 
     def test_search_returns_pubmed_ids(self) -> None:
@@ -79,7 +79,7 @@ class PubMedConnectorTests(unittest.TestCase):
         self.assertIsNone(record.abstract)
         self.assertEqual(record.publication_date, date(2021, 1, 1))
         self.assertEqual(record.doi, "10.2000/sparse-doi")
-        self.assertIn("MetaResearch Consortium", record.authors)
+        self.assertIn("Evidentia Consortium", record.authors)
         self.assertIn("Publishing", record.keywords)
 
     def test_fetch_full_text_returns_none_without_pmc_link(self) -> None:

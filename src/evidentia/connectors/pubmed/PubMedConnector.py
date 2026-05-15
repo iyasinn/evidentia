@@ -17,7 +17,7 @@ else:
     except ModuleNotFoundError:
         EntrezModule = None
 
-from metaresearch.connectors.LiteratureConnector import LiteratureConnector, RawRecord
+from evidentia.connectors.LiteratureConnector import LiteratureConnector, RawRecord
 
 
 class PubMedConnector(LiteratureConnector):
@@ -30,7 +30,7 @@ class PubMedConnector(LiteratureConnector):
         *,
         email: str,
         api_key: str | None = None,
-        tool: str = "MetaResearch",
+        tool: str = "Evidentia",
     ) -> None:
         if not email:
             raise ValueError("PubMedConnector requires an email for NCBI Entrez.")
