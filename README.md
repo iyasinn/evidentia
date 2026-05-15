@@ -1,8 +1,8 @@
-# MetaResearch
+# Evidentia
 
 Research tooling is still weirdly manual.
 
-MetaResearch is a small Python project for turning messy literature search into structured, reusable research data. The current focus is PubMed ingestion, but the real direction is larger: a foundation for search, extraction, synthesis, and eventually meta-analysis workflows that do not collapse into spreadsheet chaos.
+Evidentia is a small Python project for turning messy literature search into structured, reusable research data. The current focus is PubMed ingestion, but the real direction is larger: a foundation for search, extraction, synthesis, and eventually meta-analysis workflows that do not collapse into spreadsheet chaos.
 
 ## Why this exists
 
@@ -14,7 +14,7 @@ Most research workflows still look like this:
 - lose track of what has already been collected
 - rebuild the same dataset every time a question changes
 
-MetaResearch starts by fixing the ingestion layer.
+Evidentia starts by fixing the ingestion layer.
 
 Right now it gives you a clean PubMed connector that can:
 
@@ -33,7 +33,7 @@ The current codebase is intentionally narrow.
 .
 ├── main.py
 ├── pyproject.toml
-├── src/metaresearch/
+├── src/evidentia/
 │   └── connectors/
 │       ├── LiteratureConnector.py
 │       └── pubmed/PubMedConnector.py
@@ -61,7 +61,7 @@ pip install pytest
 NCBI requires an email for Entrez requests. You can also provide an API key directly or through `NCBI_API_KEY`.
 
 ```python
-from metaresearch.connectors.pubmed.PubMedConnector import PubMedConnector
+from evidentia.connectors.pubmed.PubMedConnector import PubMedConnector
 
 connector = PubMedConnector(email="you@example.com")
 
